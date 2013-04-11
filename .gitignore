@@ -1,3 +1,7 @@
+# # Folders
+bin/
+obj/
+
 # Object files
 *.o
 
