@@ -1,6 +1,6 @@
 CC = gcc
-CCFLAGS = -O0 -pg -Wall -g
-LDFLAGS = -pg -lm -g
+CCFLAGS = -O0 -pg -Wall -g -pthread
+LDFLAGS = -pg -lm -g -pthread
 
 SRCDIR = src/
 OBJDIR = obj/
