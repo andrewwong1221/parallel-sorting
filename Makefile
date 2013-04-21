@@ -2,14 +2,15 @@ CC = gcc
 CCFLAGS = -O0 -pg -Wall -g -pthread
 LDFLAGS = -pg -lm -g -pthread
 
-SRCDIR = src/
-OBJDIR = obj/
-EXEDIR = bin/
+SRCDIR = src
+OBJDIR = obj
+EXEDIR = bin
 
-SRCS = bitonic.c
-OBJS = $(OBJDIR)$(SRCS:.c=.o)
+# SRCS = bitonic.c radix.c
+SRCS = main.c utils.c bitonic.c radix.c
+OBJS = $(SRCS:%.c=$(OBJDIR)/%.o)
 
-BITONIC = $(EXEDIR)bitonic_sort
+SORT = $(EXEDIR)/sort
 
 
 ################################################################################
@@ -18,15 +19,16 @@ BITONIC = $(EXEDIR)bitonic_sort
 .PHONY: all clean
 ################################################################################
 
-all: $(BITONIC)
+all: $(SORT)
 
-$(BITONIC): $(OBJDIR)bitonic.o $(OBJDIR)main.o 
+$(SORT): $(OBJS)
 	$(CC) $(LDFLAGS) $^ -o $@
 
-$(OBJDIR)%.o: $(SRCDIR)%.c
+$(OBJDIR)/%.o: $(SRCDIR)/%.c
 	$(CC) -c $(CCFLAGS) $< -o $@
 
 run:
-	./$(BITONIC)
+	./$(SORT)
 clean:
-	-@rm $(EXEDIR)bitonic_sort $(OBJDIR)*
+	-rm $(EXEDIR)/*
+	-rm $(OBJDIR)/*

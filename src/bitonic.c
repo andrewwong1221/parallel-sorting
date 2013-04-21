@@ -28,25 +28,25 @@ static unsigned long long totallen;
 pthread_t *pool;
 pthread_barrier_t barrier;
 
-// Call the sort function
-void bitonic_sort(int *arr, int len) {
-	bitonic_psort(arr, len, 1);
-}
-
 // Initialize shared resources
-void init() {
+static void init() {
 	pool = (pthread_t *)malloc(sizeof(pthread_t) * (nthreads));
 	pthread_barrier_init(&barrier, NULL, nthreads);
 }
 
 // free/destroy shared resources
-void teardown() {
+static void teardown() {
 	free(pool);
 	pthread_barrier_destroy(&barrier);
 }
 
+// Call the sort function
+void bitonic_sort(int *arr, const size_t len) {
+	bitonic_psort(arr, len, 1);
+}
+
 // Parallel bitonic sort method
-void bitonic_psort(int *arr, int len, int threads) {
+void bitonic_psort(int *arr, const size_t len, int threads) {
 	int i;
 	nthreads = threads;
 	totallen = len;
