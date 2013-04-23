@@ -42,3 +42,7 @@ void radix_sort(int *a, const size_t len)
 	rad_sort_u(x, x+len, INT_MIN);
 	each(i, len) x[i] ^= INT_MIN;
 }
+
+void radix_psort(int *a, const size_t len, const int threads) {
+	radix_sort(a, len);
+}

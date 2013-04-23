@@ -46,7 +46,7 @@ void bitonic_sort(int *arr, const size_t len) {
 }
 
 // Parallel bitonic sort method
-void bitonic_psort(int *arr, const size_t len, int threads) {
+void bitonic_psort(int *arr, const size_t len, const int threads) {
 	int i;
 	nthreads = threads;
 	totallen = len;

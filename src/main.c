@@ -9,9 +9,6 @@
 
 #define ARRAY_LENGTH 1024
 
-static void bitonic_test();
-static void radix_test();
-
 int verbose = 0;
 int nthreads = 1;
 double start, end;
@@ -51,58 +48,15 @@ int main(int argc, char *argv[]) {
 	}
 	printf("len=%d\n", len);
 	arr = (int *)malloc(sizeof(int) * len);
-	bitonic_test();
-	radix_test();
+	// bitonic_test();
+	// radix_test();
+	void (*bitonic)(int *, const size_t, const int threads);
+	void (*radix)(int *, const size_t, const int threads);
+	bitonic = &bitonic_psort;
+	radix = &radix_psort;
+
+	run_sort_tests(bitonic, "Bitonic", arr, len, (const int) nthreads);
+	run_sort_tests(radix, "Radix", arr, len, (const int) nthreads);
+
 	return 0;
 }
-void bitonic_test() {
-	printf("========================\n");
-	printf("Bitonic Sort\n");
-	printf("========================\n");
-
-	/* Reverse array */
-	printf("Reverse test\n");
-	create_reverse(arr, len);
-	// Sort the array
-	bitonic_psort(arr, len, nthreads);
-	// print_array(arr,len);
-	//printf("SORTED: %d\n", validate_sort(arr, len));
-	assert(validate_sort(arr,len) != 0);
-
-	printf("Random test\n");
-	/* Random Array */
-	create_random(arr, len);
-	bitonic_psort(arr, len, nthreads);
-	// Ensure the array is sorted
-	// printf("SORTED: %d\n", validate_sort(arr, len));
-	assert(validate_sort(arr,len) != 0);
-
-	printf("Bitonic Passed!\n");
-	printf("------------------------\n");
-}
-
-
-void radix_test() {
-	printf("========================\n");
-	printf("Radix Sort\n");
-	printf("========================\n");
-
-	/* Reverse array */
-	printf("Reverse test\n");
-	create_reverse(arr, len);
-	radix_sort(arr, len);
-	// printf("Sorted: %d\n", validate_sort(arr,len));
-	assert(validate_sort(arr,len) != 0);
-
-	/* Random array */
-	printf("Random test\n");
-	create_random(arr, len);
-	radix_sort(arr, len);
-	assert(validate_sort(arr,len) != 0);
-	// printf("Sorted: %d\n", validate_sort(arr,len));
-	printf("Radix Passed!\n");
-	printf("------------------------\n");
-
-}
-
-
