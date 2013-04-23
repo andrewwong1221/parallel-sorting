@@ -19,3 +19,6 @@ obj/
 *.exe
 *.out
 *.app
+
+# Other
+*.md.html
