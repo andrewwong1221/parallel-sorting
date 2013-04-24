@@ -48,15 +48,20 @@ int main(int argc, char *argv[]) {
 	}
 	printf("len=%d\n", len);
 	arr = (int *)malloc(sizeof(int) * len);
+	assert(arr != NULL);
+
 	// bitonic_test();
 	// radix_test();
-	void (*bitonic)(int *, const size_t, const int threads);
-	void (*radix)(int *, const size_t, const int threads);
+	void (*bitonic)(int *, const size_t, const int);
+	void (*radix)(int *, const size_t);
+	void (*sample)(int *, const size_t, const int);
 	bitonic = &bitonic_psort;
-	radix = &radix_psort;
+	radix = &radix_sort;
+	sample = &sample_sort;
 
-	run_sort_tests(bitonic, "Bitonic", arr, len, (const int) nthreads);
-	run_sort_tests(radix, "Radix", arr, len, (const int) nthreads);
+	run_psort_tests(bitonic, "Bitonic", arr, len, (const int) nthreads);
+	run_sort_tests(radix, "Radix", arr, len);
+	run_psort_tests(sample, "Sample", arr, len, (const int) nthreads);
 
 	return 0;
 }

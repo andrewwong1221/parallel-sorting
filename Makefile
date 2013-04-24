@@ -7,7 +7,7 @@ OBJDIR = obj
 EXEDIR = bin
 
 # SRCS = bitonic.c radix.c
-SRCS = main.c utils.c bitonic.c radix.c
+SRCS = main.c utils.c bitonic.c radix.c sample.c
 OBJS = $(SRCS:%.c=$(OBJDIR)/%.o)
 
 SORT = $(EXEDIR)/sort

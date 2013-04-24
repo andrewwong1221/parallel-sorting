@@ -1,3 +1,7 @@
+/*
+ * Code for sequential radix sort largely based off of the examples listed on
+ * http://rosettacode.org/wiki/Sorting_algorithms/Radix_sort
+ */
 #include <stdio.h>
 #include <limits.h>
 #include <stdlib.h>
@@ -10,10 +14,18 @@
 #define MAX 10
 #define SHOWPASS
 
+typedef unsigned uint;
+
 // static void init();
 // static void teardown();
+// void *runSort(void *data);
 
-typedef unsigned uint;
+
+pthread_t *pool;
+pthread_barrier_t barrier;
+// static int *a;
+// static unsigned long long totallen;
+// static int nthreads;
 
 static void rad_sort_u(uint *from, uint *to, uint bit) {
 	if(!bit || to < from + 1) return;
@@ -38,11 +50,47 @@ void radix_sort(int *a, const size_t len)
 {
 	size_t i;
 	uint *x = (uint*) a;
+	// Flip negative signs so sorting works properly
 	each(i, len) x[i] ^= INT_MIN;
+	// Sort unsigned
 	rad_sort_u(x, x+len, INT_MIN);
+	// Flip negative signs back 
 	each(i, len) x[i] ^= INT_MIN;
 }
 
-void radix_psort(int *a, const size_t len, const int threads) {
-	radix_sort(a, len);
+/* Parallel radix sort should sort from the lsb to the msb */
+void radix_psort(int *arr, const size_t len, const int threads) {
+	// int i;
+	// a = arr;
+	// totallen = len;
+	// nthreads = threads;
+	// init();
+
+	// for(i = 1; i < nthreads; i++) {
+	// 	pthread_create(&pool[i], NULL, runSort, (void *)i);
+	// }
+	// runSort((void *) 0);
+	// for(i = 1; i < nthreads; i++) {
+	// 	pthread_join(pool[i], NULL);
+	// }
+
+	// teardown();
 }
+
+// void *runSort(void *data) {
+// 	int tid= (int) data;
+// 	pthread_barrier_wait(&barrier);
+// 	
+// 
+// }
+// 
+// void init() {
+// 	pool = (pthread_t *)malloc(sizeof(pthread_t) * nthreads);
+// 	pthread_barrier_init(&barrier, NULL, nthreads);
+// }
+// 
+// 
+// void teardown() {
+// 	free(pool);
+// 	pthread_barrier_destroy(&barrier);
+// }
