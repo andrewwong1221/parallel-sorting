@@ -1,5 +1,5 @@
 CC = gcc
-CCFLAGS = -O0 -pg -Wall -g -pthread
+CCFLAGS = -O3 -pg -Wall -g -pthread
 LDFLAGS = -pg -lm -g -pthread
 
 SRCDIR = src
@@ -7,7 +7,7 @@ OBJDIR = obj
 EXEDIR = bin
 
 # SRCS = bitonic.c radix.c
-SRCS = main.c utils.c bitonic.c radix.c sample.c
+SRCS = main.c utils.c bitonic.c radix.c sample.c hrtimer_x86.c
 OBJS = $(SRCS:%.c=$(OBJDIR)/%.o)
 
 SORT = $(EXEDIR)/sort
@@ -20,6 +20,17 @@ SORT = $(EXEDIR)/sort
 ################################################################################
 
 all: $(SORT)
+
+
+# Create output directories
+$(OBJDIR):
+	-mkdir -p $(OBJDIR)
+$(EXEDIR):
+	-mkdir -p $(EXEDIR)
+
+$(OBJS): | $(OBJDIR)
+$(SORT): | $(EXEDIR)
+
 
 $(SORT): $(OBJS)
 	$(CC) $(LDFLAGS) $^ -o $@

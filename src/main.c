@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <limits.h>
 #include <assert.h>
+#include "hrtimer_x86.h"
 #include "sort.h"
 #include "utils.h"
 
@@ -50,8 +51,6 @@ int main(int argc, char *argv[]) {
 	arr = (int *)malloc(sizeof(int) * len);
 	assert(arr != NULL);
 
-	// bitonic_test();
-	// radix_test();
 	void (*bitonic)(int *, const size_t, const int);
 	void (*radix)(int *, const size_t);
 	void (*sample)(int *, const size_t, const int);

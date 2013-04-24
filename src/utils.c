@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "sort.h"
+#include "hrtimer_x86.h"
 
 void print_array(int *arr, int len) {
 	int i;
@@ -82,6 +83,7 @@ void create_duplicates(int *a, int len) {
 void run_psort_tests(void (*sortfunc)(int *, const size_t, const int),
 		const char* name, int *arr, const size_t len, const int threads) {
 	int *copy = (int *) calloc(len, sizeof(int));
+	double start, end;
 	printf("========================\n");
 	printf("%s Sort\n", name);
 	printf("========================\n");
@@ -90,16 +92,22 @@ void run_psort_tests(void (*sortfunc)(int *, const size_t, const int),
 	create_reverse(arr, len);
 	create_copy(copy, arr, len);
 	radix_sort(copy, len);
+	start = gethrtime_x86();
 	sortfunc(arr, len, threads);
+	end = gethrtime_x86();
 	assert(validate_sort(arr, copy, len) != 0);
+	printf("Time: %f\n", end-start);
 
 	/* Random array */
 	printf("Random test\n");
 	create_random(arr, len);
 	create_copy(copy, arr, len);
 	radix_sort(copy, len);
+	start = gethrtime_x86();
 	sortfunc(arr, len, threads);
+	end = gethrtime_x86();
 	assert(validate_sort(arr, copy, len) != 0);
+	printf("Time: %f\n", end-start);
 	printf("%s passed!\n", name);
 	
 	printf("------------------------\n");
@@ -109,6 +117,7 @@ void run_psort_tests(void (*sortfunc)(int *, const size_t, const int),
 void run_sort_tests(void (*sortfunc)(int *, const size_t),
 		const char* name, int *arr, const size_t len, const int threads) {
 	int *copy = (int *) calloc(len, sizeof(int));
+	double start, end;
 	printf("========================\n");
 	printf("%s Sort\n", name);
 	printf("========================\n");
@@ -117,16 +126,22 @@ void run_sort_tests(void (*sortfunc)(int *, const size_t),
 	create_reverse(arr, len);
 	create_copy(copy, arr, len);
 	radix_sort(copy, len);
+	start = gethrtime_x86();
 	sortfunc(arr, len);
+	end = gethrtime_x86();
 	assert(validate_sort(arr, copy, len) != 0);
+	printf("Time: %f\n", end-start);
 
 	/* Random array */
 	printf("Random test\n");
 	create_random(arr, len);
 	create_copy(copy, arr, len);
 	radix_sort(copy, len);
+	start = gethrtime_x86();
 	sortfunc(arr, len);
+	end = gethrtime_x86();
 	assert(validate_sort(arr, copy, len) != 0);
+	printf("Time: %f\n", end-start);
 	printf("%s passed!\n", name);
 	
 	printf("------------------------\n");

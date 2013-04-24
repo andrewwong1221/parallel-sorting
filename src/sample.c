@@ -9,7 +9,6 @@
 #include "sort.h"
 #include "utils.h"
 #define SAMPLES 5
-#define DEBUG 0
 #define MAX(A,B) ((A)>(B) ? (A) : (B))
 #define MIN(A,B) ((A)>(B) ? (B) : (A))
 
@@ -222,7 +221,7 @@ static void find_start_idxs(const int tid) {
 static int binary_search(int num, int *s, const int len) {
 	int low = 0;
 	int high = len;
-	int idx;
+	int idx = -1;
 	while(low < high) {
 		idx = (high + low) / 2;
 		if(num < s[idx]) {
