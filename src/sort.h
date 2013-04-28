@@ -9,4 +9,6 @@ void radix_psort(int *a, const size_t len, const int threads);
 
 void sample_sort(int *a, const size_t len, const int threads);
 
+void merge_sort(int *a, const size_t len);
+
 #endif /* _SORT_H_ */

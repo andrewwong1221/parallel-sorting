@@ -4,7 +4,6 @@
 #include <unistd.h>
 #include <limits.h>
 #include <assert.h>
-#include "hrtimer_x86.h"
 #include "sort.h"
 #include "utils.h"
 
@@ -51,16 +50,22 @@ int main(int argc, char *argv[]) {
 	arr = (int *)malloc(sizeof(int) * len);
 	assert(arr != NULL);
 
+	// sort function declarations
 	void (*bitonic)(int *, const size_t, const int);
 	void (*radix)(int *, const size_t);
 	void (*sample)(int *, const size_t, const int);
+	void (*merge)(int *, const size_t);
+
+	// Sort functions
 	bitonic = &bitonic_psort;
 	radix = &radix_sort;
 	sample = &sample_sort;
+	merge = &merge_sort;
 
 	run_psort_tests(bitonic, "Bitonic", arr, len, (const int) nthreads);
 	run_sort_tests(radix, "Radix", arr, len);
 	run_psort_tests(sample, "Sample", arr, len, (const int) nthreads);
+	run_sort_tests(merge, "Merge", arr, len);
 
 	return 0;
 }

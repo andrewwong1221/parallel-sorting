@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "sort.h"
+#include "utils.h"
 #include "hrtimer_x86.h"
 
 void print_array(int *arr, int len) {
@@ -83,31 +84,45 @@ void create_duplicates(int *a, int len) {
 void run_psort_tests(void (*sortfunc)(int *, const size_t, const int),
 		const char* name, int *arr, const size_t len, const int threads) {
 	int *copy = (int *) calloc(len, sizeof(int));
+	int *orig = (int *) calloc(len, sizeof(int));
+	int i;
 	double start, end;
 	printf("========================\n");
 	printf("%s Sort\n", name);
 	printf("========================\n");
 	/* Reverse array */
 	printf("Reverse test\n");
-	create_reverse(arr, len);
-	create_copy(copy, arr, len);
+	create_reverse(orig, len);
+	create_copy(copy, orig, len);
 	radix_sort(copy, len);
-	start = gethrtime_x86();
-	sortfunc(arr, len, threads);
-	end = gethrtime_x86();
-	assert(validate_sort(arr, copy, len) != 0);
-	printf("Time: %f\n", end-start);
+	double total = 0;
+	for(i = 0; i < ITER; i++) {
+		create_copy(arr, orig, len);
+		start = gethrtime_x86();
+		sortfunc(arr, len, threads);
+		end = gethrtime_x86();
+		printf("%i: %f\n", i, end-start);
+		total += end-start;
+		assert(validate_sort(arr, copy, len) != 0);
+	}
+	printf("Time: %f\n", total/(ITER * 1.0));
 
 	/* Random array */
 	printf("Random test\n");
-	create_random(arr, len);
-	create_copy(copy, arr, len);
+	create_random(orig, len);
+	create_copy(copy, orig, len);
 	radix_sort(copy, len);
-	start = gethrtime_x86();
-	sortfunc(arr, len, threads);
-	end = gethrtime_x86();
-	assert(validate_sort(arr, copy, len) != 0);
-	printf("Time: %f\n", end-start);
+	total = 0;
+	for(i = 0; i < ITER; i++) {
+		create_copy(arr, orig, len);
+		start = gethrtime_x86();
+		sortfunc(arr, len, threads);
+		end = gethrtime_x86();
+		printf("%i: %f\n", i, end-start);
+		total += end-start;
+		assert(validate_sort(arr, copy, len) != 0);
+	}
+	printf("Time: %f\n", total/(ITER*1.0));
 	printf("%s passed!\n", name);
 	
 	printf("------------------------\n");
@@ -115,33 +130,48 @@ void run_psort_tests(void (*sortfunc)(int *, const size_t, const int),
 
 /* Sequential sort tests */
 void run_sort_tests(void (*sortfunc)(int *, const size_t),
-		const char* name, int *arr, const size_t len, const int threads) {
+		const char* name, int *arr, const size_t len) {
+	int *orig = (int *) calloc(len, sizeof(int));
 	int *copy = (int *) calloc(len, sizeof(int));
+	int i;
 	double start, end;
 	printf("========================\n");
 	printf("%s Sort\n", name);
 	printf("========================\n");
 	/* Reverse array */
 	printf("Reverse test\n");
-	create_reverse(arr, len);
-	create_copy(copy, arr, len);
+	create_reverse(orig, len);
+	create_copy(copy, orig, len);
 	radix_sort(copy, len);
-	start = gethrtime_x86();
-	sortfunc(arr, len);
-	end = gethrtime_x86();
-	assert(validate_sort(arr, copy, len) != 0);
-	printf("Time: %f\n", end-start);
+	double total = 0;
+	for(i = 0; i < ITER; i++) {
+		create_copy(arr, orig, len);
+		start = gethrtime_x86();
+		sortfunc(arr, len);
+		end = gethrtime_x86();
+		printf("%i: %f\n", i, end-start);
+		total += end-start;
+		assert(validate_sort(arr, copy, len) != 0);
+	}
+
+	printf("Time: %f\n", total/(ITER * 1.0));
 
 	/* Random array */
 	printf("Random test\n");
-	create_random(arr, len);
-	create_copy(copy, arr, len);
+	create_random(orig, len);
+	create_copy(copy, orig, len);
 	radix_sort(copy, len);
-	start = gethrtime_x86();
-	sortfunc(arr, len);
-	end = gethrtime_x86();
-	assert(validate_sort(arr, copy, len) != 0);
-	printf("Time: %f\n", end-start);
+	total = 0;
+	for(i = 0; i < ITER; i++) {
+		create_copy(arr, orig, len);
+		start = gethrtime_x86();
+		sortfunc(arr, len);
+		end = gethrtime_x86();
+		total += end-start;
+		printf("%i: %f\n", i, end-start);
+		assert(validate_sort(arr, copy, len) != 0);
+	}
+	printf("Time: %f\n", total/(ITER*1.0));
 	printf("%s passed!\n", name);
 	
 	printf("------------------------\n");

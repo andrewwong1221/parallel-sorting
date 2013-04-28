@@ -1,5 +1,6 @@
 #ifndef _UTILS_H_
 #define _UTILS_H_
+#define ITER 10
 
 void print_array(int *a, int n);
 int validate_sort(int *arr, int *copy, int len);
