@@ -3,7 +3,11 @@
  * provided by fh-flensburg.de:
  * http://www.iti.fh-flensburg.de/lang/algorithmen/sortieren/bitonic/bitonicen.htm
  *
+ * Better implementation based off of:
+ * http://www.tools-of-computing.com/tc/CS/Sorts/bitonic_sort.htm
  * WARNING: Only sorts array of len = 2^k
+ *
+ * 
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -40,9 +44,22 @@ static void teardown() {
 	pthread_barrier_destroy(&barrier);
 }
 
-// Call the sort function
+// Sequential bitonic sort
+// This is very radix-esque
 void bitonic_sort(int *arr, const size_t len) {
-	bitonic_psort(arr, len, 1);
+	//bitonic_psort(arr, len, 1);
+	int i, j, k;
+	for(k = 2; k <= len; k*= 2) {
+		for(j = k>>1; j > 0; j= j>>1) {
+			for(i = 0; i < len; i++) {
+				int ixj = i^j;
+				if((ixj)>i) {
+					if((i&k) == 0 && a[i]>a[ixj]) swap(i,ixj);
+					if((i&k) != 0 && a[i]<a[ixj]) swap(i,ixj);
+				}
+			}
+		}
+	}
 }
 
 // Parallel bitonic sort method
@@ -69,28 +86,41 @@ void *runSort(void *data) {
 	int tid = (int) data;
 	// printf("Hello from tid %d\n", tid);
 	pthread_barrier_wait(&barrier);
-	// Start timer?
-	int sectionsize = totallen / nthreads;
-	bitonicSort(sectionsize * tid, sectionsize, (tid+1)%2);
+	int i, j, k;
 	
-	// Merge
-	int i;
-	// De
-	for(i = nthreads / 2; i > 0; i /= 2) {
-		pthread_barrier_wait(&barrier);
-		if(tid < i) {
-			int length = totallen / i;
-			int start = tid*length;
-			// int end = start + length;
-			// fprintf(stderr, "%d: Merging: %d - %d, %d, %d\n", tid, start, end, length, (tid+1)%2);
-			// Merge results from two threads
-			bitonicMerge(start, length, (tid+1)%2);
-		}
-		else {
-			// Do nothing if thread is not needed
-			// printf("Thread %d waiting\n", tid);
+	for(k = 2; k <= totallen; k*= 2) {
+		for(j = k>>1; j > 0; j = j>>1) {
+			for(i = tid%nthreads; i < totallen; i+=nthreads) {
+				int ixj = i^j;
+				if((ixj)>i) {
+					if((i&k) == 0 && a[i]>a[ixj]) swap(i, ixj);
+					if((i&k) != 0 && a[i]<a[ixj]) swap(i, ixj);
+				}
+			}
+			pthread_barrier_wait(&barrier);
 		}
 	}
+
+	//int sectionsize = totallen / nthreads;
+	//bitonicSort(sectionsize * tid, sectionsize, (tid+1)%2);
+	
+	// Merge
+	// int i;
+	// for(i = nthreads / 2; i > 0; i /= 2) {
+	// 	pthread_barrier_wait(&barrier);
+	// 	if(tid < i) {
+	// 		int length = totallen / i;
+	// 		int start = tid*length;
+	// 		// int end = start + length;
+	// 		// fprintf(stderr, "%d: Merging: %d - %d, %d, %d\n", tid, start, end, length, (tid+1)%2);
+	// 		// Merge results from two threads
+	// 		bitonicMerge(start, length, (tid+1)%2);
+	// 	}
+	// 	else {
+	// 		// Do nothing if thread is not needed
+	// 		// printf("Thread %d waiting\n", tid);
+	// 	}
+	// }
 	return NULL;
 }
 

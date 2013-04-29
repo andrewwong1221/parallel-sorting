@@ -11,4 +11,6 @@ void sample_sort(int *a, const size_t len, const int threads);
 
 void merge_sort(int *a, const size_t len);
 
+void qsort_wrapper(int *a, const size_t len);
+
 #endif /* _SORT_H_ */

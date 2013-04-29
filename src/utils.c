@@ -98,14 +98,20 @@ void run_psort_tests(void (*sortfunc)(int *, const size_t, const int),
 	double total = 0;
 	for(i = 0; i < ITER; i++) {
 		create_copy(arr, orig, len);
+#ifdef _HRTIMER_X86_H_
 		start = gethrtime_x86();
+#endif
 		sortfunc(arr, len, threads);
+#ifdef _HRTIMER_X86_H_
 		end = gethrtime_x86();
 		printf("%i: %f\n", i, end-start);
 		total += end-start;
+#endif
 		assert(validate_sort(arr, copy, len) != 0);
 	}
+#ifdef _HRTIMER_X86_H_
 	printf("Time: %f\n", total/(ITER * 1.0));
+#endif
 
 	/* Random array */
 	printf("Random test\n");
@@ -115,17 +121,25 @@ void run_psort_tests(void (*sortfunc)(int *, const size_t, const int),
 	total = 0;
 	for(i = 0; i < ITER; i++) {
 		create_copy(arr, orig, len);
+#ifdef _HRTIMER_X86_H_
 		start = gethrtime_x86();
+#endif
 		sortfunc(arr, len, threads);
+#ifdef _HRTIMER_X86_H_
 		end = gethrtime_x86();
 		printf("%i: %f\n", i, end-start);
 		total += end-start;
+#endif
 		assert(validate_sort(arr, copy, len) != 0);
 	}
+#ifdef _HRTIMER_X86_H_
 	printf("Time: %f\n", total/(ITER*1.0));
+#endif
 	printf("%s passed!\n", name);
 	
 	printf("------------------------\n");
+	free(orig);
+	free(copy);
 }
 
 /* Sequential sort tests */
@@ -146,15 +160,21 @@ void run_sort_tests(void (*sortfunc)(int *, const size_t),
 	double total = 0;
 	for(i = 0; i < ITER; i++) {
 		create_copy(arr, orig, len);
+#ifdef _HRTIMER_X86_H_
 		start = gethrtime_x86();
+#endif
 		sortfunc(arr, len);
+#ifdef _HRTIMER_X86_H_
 		end = gethrtime_x86();
 		printf("%i: %f\n", i, end-start);
 		total += end-start;
+#endif
 		assert(validate_sort(arr, copy, len) != 0);
 	}
 
+#ifdef _HRTIMER_X86_H_
 	printf("Time: %f\n", total/(ITER * 1.0));
+#endif
 
 	/* Random array */
 	printf("Random test\n");
@@ -164,15 +184,23 @@ void run_sort_tests(void (*sortfunc)(int *, const size_t),
 	total = 0;
 	for(i = 0; i < ITER; i++) {
 		create_copy(arr, orig, len);
+#ifdef _HRTIMER_X86_H_
 		start = gethrtime_x86();
+#endif
 		sortfunc(arr, len);
+#ifdef _HRTIMER_X86_H_
 		end = gethrtime_x86();
 		total += end-start;
 		printf("%i: %f\n", i, end-start);
+#endif
 		assert(validate_sort(arr, copy, len) != 0);
 	}
+#ifdef _HRTIMER_X86_H_
 	printf("Time: %f\n", total/(ITER*1.0));
+#endif
 	printf("%s passed!\n", name);
 	
 	printf("------------------------\n");
+	free(orig);
+	free(copy);
 }

@@ -20,6 +20,14 @@ void usage() {
 	exit(1);
 }
 
+void init() {
+	arr = (int *)malloc(sizeof(int) * len);
+	assert(arr != NULL);
+}
+
+void teardown() {
+	free(arr);
+}
 extern char *optarg;
 int main(int argc, char *argv[]) {
 	int i;
@@ -47,25 +55,28 @@ int main(int argc, char *argv[]) {
 		}
 	}
 	printf("len=%d\n", len);
-	arr = (int *)malloc(sizeof(int) * len);
-	assert(arr != NULL);
+	init();
 
 	// sort function declarations
 	void (*bitonic)(int *, const size_t, const int);
 	void (*radix)(int *, const size_t);
 	void (*sample)(int *, const size_t, const int);
 	void (*merge)(int *, const size_t);
+	void (*qsort_wrap)(int *, const size_t);
 
 	// Sort functions
 	bitonic = &bitonic_psort;
 	radix = &radix_sort;
 	sample = &sample_sort;
 	merge = &merge_sort;
+	qsort_wrap = &qsort_wrapper;
 
 	run_psort_tests(bitonic, "Bitonic", arr, len, (const int) nthreads);
 	run_sort_tests(radix, "Radix", arr, len);
 	run_psort_tests(sample, "Sample", arr, len, (const int) nthreads);
 	run_sort_tests(merge, "Merge", arr, len);
+	run_sort_tests(qsort_wrap, "stdlib::qsort", arr, len);
 
+	teardown();
 	return 0;
 }

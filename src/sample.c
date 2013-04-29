@@ -56,6 +56,7 @@ static void teardown() {
 		free(counts[i]);
 		free(startptrs[i]);
 	}
+	free(startptrs);
 	free(counts);
 	free(pool);
 	free(samples);
