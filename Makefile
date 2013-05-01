@@ -1,5 +1,5 @@
 CC = gcc
-CCFLAGS = -O3 -Wall -g -pthread
+CCFLAGS = -O0 -Wall -g -pthread
 LDFLAGS = -lm -g -pthread
 
 LIBS = $(LIBDIR)/libsort.a

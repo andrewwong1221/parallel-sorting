@@ -47,7 +47,7 @@ void merge_arrays(int *a, const size_t lena, int *b, const size_t lenb) {
 	int i1 = 0, i2 = 0, ib = 0;
 	int alloc = 0;
 	if(buffer == NULL) {
-		buffer = (int *) calloc(sizeof(int), totallen);
+		buffer = (int *) calloc(sizeof(int), 2*((lena > lenb) ? lena : lenb));
 		alloc = 1;
 	}
 	// Compare two lists
