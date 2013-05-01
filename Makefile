@@ -30,7 +30,7 @@ library: $(LIBS)
 
 # Create sorting lib
 $(LIBS): $(SORTOBJS)
-	ar rvs $@ $(SORTOBJS)
+	ar rvcs $@ $(SORTOBJS)
 
 # Create output directories
 $(OBJDIR):
