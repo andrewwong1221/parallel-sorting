@@ -22,15 +22,6 @@ int validate_sort(int *arr, int *copy, int len) {
 			ordered = 0;
 		}
 	}
-#if DEBUG
-	if(!ordered) {
-		for(i = 1; i < len; i++) {
-			if(arr[i-1] > arr[i]) {
-				printf("Error at a[%d] == %d and a[%d] == %d\n", i-1, arr[i-1], i, arr[i]);
-			}
-		}
-	}
-#endif
 	return ordered;
 }
 
