@@ -14,7 +14,6 @@
 static void init();
 static void teardown();
 static void sort_array(int *a, const size_t len);
-static void merge_arrays(int *a, const size_t lena, int *b, const size_t lenb);
 
 static size_t totallen;
 static int *buffer;
@@ -44,7 +43,7 @@ static void sort_array(int *a, const size_t len) {
 	memcpy(a, buffer, len*sizeof(int));
 }
 
-static void merge_arrays(int *a, const size_t lena, int *b, const size_t lenb) {
+void merge_arrays(int *a, const size_t lena, int *b, const size_t lenb) {
 	int i1 = 0, i2 = 0, ib = 0;
 	// Compare two lists
 	while(i1 < lena && i2 < lenb) {

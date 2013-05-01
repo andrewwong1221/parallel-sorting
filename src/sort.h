@@ -10,6 +10,7 @@ void radix_psort(int *a, const size_t len, const int threads);
 void sample_sort(int *a, const size_t len, const int threads);
 
 void merge_sort(int *a, const size_t len);
+void merge_arrays(int *a, const size_t lena, int *b, const size_t lenb);
 
 void qsort_wrapper(int *a, const size_t len);
 
