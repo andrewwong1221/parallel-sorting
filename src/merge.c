@@ -14,6 +14,7 @@
 static void init();
 static void teardown();
 static void sort_array(int *a, const size_t len);
+static void merge_arrays(int *a, const size_t lena, int *b, const size_t lenb);
 
 static size_t totallen;
 static int *buffer;
@@ -43,13 +44,8 @@ static void sort_array(int *a, const size_t len) {
 	memcpy(a, buffer, len*sizeof(int));
 }
 
-void merge_arrays(int *a, const size_t lena, int *b, const size_t lenb) {
+static void merge_arrays(int *a, const size_t lena, int *b, const size_t lenb) {
 	int i1 = 0, i2 = 0, ib = 0;
-	int alloc = 0;
-	if(buffer == NULL) {
-		buffer = (int *) calloc(sizeof(int), 2*((lena > lenb) ? lena : lenb));
-		alloc = 1;
-	}
 	// Compare two lists
 	while(i1 < lena && i2 < lenb) {
 		if(a[i1] <= b[i2]) {
@@ -73,8 +69,14 @@ void merge_arrays(int *a, const size_t lena, int *b, const size_t lenb) {
 		i2++;
 		ib++;
 	}
-	if(alloc == 1) {
-		free(buffer);
-	}
 }
 
+void two_way_merge(int *a, const size_t len) {
+	buffer = (int *) malloc(sizeof(int) * len);
+	if(buffer == NULL) {
+		perror("NOT ENOUGH MEMORY");
+	}
+	int m = len / 2;
+	merge_arrays(a, m, a+m, len - m);
+	memcpy(a, buffer, len*sizeof(int));
+}
