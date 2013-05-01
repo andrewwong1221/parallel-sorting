@@ -3,7 +3,9 @@
 #include <assert.h>
 #include "sort.h"
 #include "utils.h"
+#ifndef SUNOS
 #include "hrtimer_x86.h"
+#endif
 
 void print_array(int *arr, int len) {
 	int i;
@@ -86,7 +88,9 @@ void run_psort_tests(void (*sortfunc)(int *, const size_t, const int),
 	int *copy = (int *) calloc(len, sizeof(int));
 	int *orig = (int *) calloc(len, sizeof(int));
 	int i;
+#ifdef _HRTIMER_X86_H_
 	double start, end;
+#endif
 	printf("========================\n");
 	printf("%s Sort\n", name);
 	printf("========================\n");
@@ -95,7 +99,9 @@ void run_psort_tests(void (*sortfunc)(int *, const size_t, const int),
 	create_reverse(orig, len);
 	create_copy(copy, orig, len);
 	radix_sort(copy, len);
+#ifdef _HRTIMER_X86_H_
 	double total = 0;
+#endif
 	for(i = 0; i < ITER; i++) {
 		create_copy(arr, orig, len);
 #ifdef _HRTIMER_X86_H_
@@ -118,7 +124,9 @@ void run_psort_tests(void (*sortfunc)(int *, const size_t, const int),
 	create_random(orig, len);
 	create_copy(copy, orig, len);
 	radix_sort(copy, len);
+#ifdef _HRTIMER_X86_H_
 	total = 0;
+#endif
 	for(i = 0; i < ITER; i++) {
 		create_copy(arr, orig, len);
 #ifdef _HRTIMER_X86_H_
@@ -148,7 +156,9 @@ void run_sort_tests(void (*sortfunc)(int *, const size_t),
 	int *orig = (int *) calloc(len, sizeof(int));
 	int *copy = (int *) calloc(len, sizeof(int));
 	int i;
+#ifdef _HRTIMER_X86_H_
 	double start, end;
+#endif
 	printf("========================\n");
 	printf("%s Sort\n", name);
 	printf("========================\n");
@@ -157,7 +167,9 @@ void run_sort_tests(void (*sortfunc)(int *, const size_t),
 	create_reverse(orig, len);
 	create_copy(copy, orig, len);
 	radix_sort(copy, len);
+#ifdef _HRTIMER_X86_H_
 	double total = 0;
+#endif
 	for(i = 0; i < ITER; i++) {
 		create_copy(arr, orig, len);
 #ifdef _HRTIMER_X86_H_
@@ -181,7 +193,9 @@ void run_sort_tests(void (*sortfunc)(int *, const size_t),
 	create_random(orig, len);
 	create_copy(copy, orig, len);
 	radix_sort(copy, len);
+#ifdef _HRTIMER_X86_H_
 	total = 0;
+#endif
 	for(i = 0; i < ITER; i++) {
 		create_copy(arr, orig, len);
 #ifdef _HRTIMER_X86_H_

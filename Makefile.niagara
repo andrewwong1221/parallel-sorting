@@ -1,13 +1,13 @@
 CC = gcc
-CCFLAGS = -O3 -pg -Wall -g -pthread
-LDFLAGS = -pg -lm -g -pthread
+CCFLAGS = -O3 -pg -Wall -g -pthread -DSUNOS
+LDFLAGS = -pg -lm -g -pthread -DSUNOS
 
 SRCDIR = src
 OBJDIR = obj
 EXEDIR = bin
 
 # SRCS = bitonic.c radix.c
-SRCS = main.c utils.c bitonic.c radix.c sample.c merge.c
+SRCS = main.c utils.c bitonic.c radix.c sample.c merge.c qsort.c
 OBJS = $(SRCS:%.c=$(OBJDIR)/%.o)
 
 SORT = $(EXEDIR)/sort
