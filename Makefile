@@ -26,7 +26,7 @@ SORT = $(EXEDIR)/sort
 
 all: $(SORT) $(LIBS)
 
-# library: $(LIBS)
+library: $(LIBS)
 
 # Create sorting lib
 $(LIBS): $(SORTOBJS)
