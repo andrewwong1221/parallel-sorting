@@ -1,6 +1,7 @@
 # # Folders
 bin/
 obj/
+lib/
 
 # Object files
 *.o

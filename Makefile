@@ -2,13 +2,18 @@ CC = gcc
 CCFLAGS = -O3 -Wall -g -pthread
 LDFLAGS = -lm -g -pthread
 
+LIBS = $(LIBDIR)/libsort.a
+
 SRCDIR = src
 OBJDIR = obj
 EXEDIR = bin
+LIBDIR = lib
 
-# SRCS = bitonic.c radix.c
-SRCS = main.c utils.c bitonic.c radix.c sample.c merge.c hrtimer_x86.c qsort.c
+UTILSRC = main.c utils.c hrtimer_x86.c
+SORTSRC = bitonic.c radix.c sample.c merge.c qsort.c
+SRCS = $(SORTSRC) $(UTILSRC)
 OBJS = $(SRCS:%.c=$(OBJDIR)/%.o)
+SORTOBJS = $(SORTSRC:%.c=$(OBJDIR)/%.o)
 
 SORT = $(EXEDIR)/sort
 
@@ -16,19 +21,27 @@ SORT = $(EXEDIR)/sort
 ################################################################################
 # Run all and clean if "targets" exist
 ################################################################################
-.PHONY: all clean
+.PHONY: all clean 
 ################################################################################
 
-all: $(SORT)
+all: $(SORT) $(LIBS)
 
+# library: $(LIBS)
+
+# Create sorting lib
+$(LIBS): $(SORTOBJS)
+	ar rvs $@ $(SORTOBJS)
 
 # Create output directories
 $(OBJDIR):
 	-mkdir -p $(OBJDIR)
 $(EXEDIR):
 	-mkdir -p $(EXEDIR)
+$(LIBDIR):
+	-mkdir -p $(LIBDIR)
 
-$(OBJS): | $(OBJDIR)
+$(LIBS): | $(LIBDIR)
+$(OBJS): | $(OBJDIR) 
 $(SORT): | $(EXEDIR)
 
 
@@ -41,5 +54,6 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.c
 run:
 	./$(SORT)
 clean:
-	-rm $(EXEDIR)/*
-	-rm $(OBJDIR)/*
+	-@rm $(LIBDIR)/*
+	-@rm $(EXEDIR)/*
+	-@rm $(OBJDIR)/*
