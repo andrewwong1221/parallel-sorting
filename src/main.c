@@ -75,12 +75,12 @@ int main(int argc, char *argv[]) {
 	merge = &merge_sort;
 	qsort_wrap = &qsort_wrapper;
 
-	//run_sort_tests(insertion, "Insert", arr, len);
-	run_psort_tests(bitonic, "Bitonic", arr, len, (const int) nthreads);
-	// run_sort_tests(radix, "Radix", arr, len);
-	run_psort_tests(sample, "Sample", arr, len, (const int) nthreads);
-	// run_sort_tests(merge, "Merge", arr, len);
-	// run_sort_tests(qsort_wrap, "stdlib::qsort", arr, len);
+	run_sort_tests(insertion, "Insert", arr, len);
+	//run_psort_tests(bitonic, "Bitonic", arr, len, (const int) nthreads);
+	run_sort_tests(radix, "Radix", arr, len);
+	//run_psort_tests(sample, "Sample", arr, len, (const int) nthreads);
+	run_sort_tests(merge, "Merge", arr, len);
+	run_sort_tests(qsort_wrap, "stdlib::qsort", arr, len);
 
 	teardown();
 	return 0;
