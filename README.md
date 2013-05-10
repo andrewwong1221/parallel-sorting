@@ -1,17 +1,18 @@
 Parallel Sorting
 ================
 
-An analysis of various parallel sorting algorithms for my term project in CSC258 at the University of Rochester
+An analysis of various parallel sorting algorithms for my term project in CSC258 at the University of Rochester. Please see the writeup for additional details.
 
-Threaded Sorts
---------------
-### Bitonic Merge Sort
-### Sample Sort
-### Radix Sort
+To run the program, compile using the makefile specified for the architecture and
+run:
+    bin/sort [-v] -n <threads> -s <array_size>
 
-Distributed Sorts
------------------
-### WIND-SORT
+## Sorts implemented
+* Radix Sort
+* Merge Sort
+* Bitonic Merge Sort
+* Insertion Sort
+* Sample Sort
 
 References
 ----------
