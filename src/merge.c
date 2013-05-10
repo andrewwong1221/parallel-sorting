@@ -4,6 +4,7 @@
  */
 #include <stdio.h>
 #include <string.h>
+#include <limits.h>
 #include <stdlib.h>
 #include <pthread.h>
 #include "sort.h"
@@ -79,8 +80,30 @@ void two_way_merge(int *a, const size_t len) {
 	int m = len / 2;
 	merge_arrays(a, m, a+m, len - m);
 	memcpy(a, buffer, len*sizeof(int));
+	free(buffer);
 }
 
-void k_way_merge(int *a, const size_t len, int k) {
-
+void k_way_merge(int *a, int **arrs, const size_t len, int k) {
+	int *counter = (int *)malloc(sizeof(int) * k);
+	// Must be divisible
+	int sectsize = len / k;
+	int i;
+	for(i = 0; i < k; i++) {
+		counter[i] = 0;
+	}
+	for(i = 0; i < len; i++) {
+		// Find min
+		int j;
+		int min = INT_MAX, minidx = 0;
+		for(j = 0; j < k; j++) {
+			if(counter[j] < sectsize && arrs[j][counter[j]] < min) {
+				min = arrs[j][counter[j]];
+				minidx = j;
+			}
+		}
+		a[i] = arrs[minidx][counter[minidx]];
+		counter[minidx]++;
+	}
+	free(counter);
 }
+
