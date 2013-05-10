@@ -9,7 +9,7 @@
 
 #define ARRAY_LENGTH 1024
 
-int verbose = 0;
+extern int verbose;
 int nthreads = 1;
 double start, end;
 int *arr;
@@ -54,10 +54,13 @@ int main(int argc, char *argv[]) {
 				break;
 		}
 	}
-	printf("len=%d\n", len);
+	if(verbose) {
+		printf("len=%d\n", len);
+	}
 	init();
 
 	// sort function declarations
+	void (*insertion) (int *, const size_t);
 	void (*bitonic)(int *, const size_t, const int);
 	void (*radix)(int *, const size_t);
 	void (*sample)(int *, const size_t, const int);
@@ -65,17 +68,19 @@ int main(int argc, char *argv[]) {
 	void (*qsort_wrap)(int *, const size_t);
 
 	// Sort functions
+	insertion = &insertion_sort;
 	bitonic = &bitonic_psort;
 	radix = &radix_sort;
 	sample = &sample_sort;
 	merge = &merge_sort;
 	qsort_wrap = &qsort_wrapper;
 
+	//run_sort_tests(insertion, "Insert", arr, len);
 	run_psort_tests(bitonic, "Bitonic", arr, len, (const int) nthreads);
-	run_sort_tests(radix, "Radix", arr, len);
+	// run_sort_tests(radix, "Radix", arr, len);
 	run_psort_tests(sample, "Sample", arr, len, (const int) nthreads);
-	run_sort_tests(merge, "Merge", arr, len);
-	run_sort_tests(qsort_wrap, "stdlib::qsort", arr, len);
+	// run_sort_tests(merge, "Merge", arr, len);
+	// run_sort_tests(qsort_wrap, "stdlib::qsort", arr, len);
 
 	teardown();
 	return 0;

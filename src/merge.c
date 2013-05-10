@@ -80,3 +80,7 @@ void two_way_merge(int *a, const size_t len) {
 	merge_arrays(a, m, a+m, len - m);
 	memcpy(a, buffer, len*sizeof(int));
 }
+
+void k_way_merge(int *a, const size_t len, int k) {
+
+}

@@ -1,6 +1,6 @@
 CC = gcc
-CCFLAGS = -O3 -Wall -g -pthread
-LDFLAGS = -lm -g -pthread
+CCFLAGS = -O3 -Wall -pg -g -pthread
+LDFLAGS = -lm -g -pg -pthread
 
 LIBS = $(LIBDIR)/libsort.a
 
@@ -10,7 +10,7 @@ EXEDIR = bin
 LIBDIR = lib
 
 UTILSRC = main.c utils.c hrtimer_x86.c
-SORTSRC = bitonic.c radix.c sample.c merge.c qsort.c
+SORTSRC = bitonic.c radix.c sample.c merge.c qsort.c insertion.c
 SRCS = $(SORTSRC) $(UTILSRC)
 OBJS = $(SRCS:%.c=$(OBJDIR)/%.o)
 SORTOBJS = $(SORTSRC:%.c=$(OBJDIR)/%.o)

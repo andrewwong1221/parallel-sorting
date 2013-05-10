@@ -6,6 +6,8 @@
 #ifndef SUNOS
 #include "hrtimer_x86.h"
 #endif
+#include <time.h>
+#include <sys/time.h>
 
 void print_array(int *arr, int len) {
 	int i;
@@ -79,64 +81,93 @@ void run_psort_tests(void (*sortfunc)(int *, const size_t, const int),
 	int *copy = (int *) calloc(len, sizeof(int));
 	int *orig = (int *) calloc(len, sizeof(int));
 	int i;
-#ifdef _HRTIMER_X86_H_
+#ifndef SUNOS
 	double start, end;
+#else
+	struct timeval start, end;
 #endif
-	printf("========================\n");
-	printf("%s Sort\n", name);
-	printf("========================\n");
-	/* Reverse array */
-	printf("Reverse test\n");
+	if(verbose) {
+		printf("========================\n");
+		printf("%s Sort\n", name);
+		printf("========================\n");
+	}
+	if(verbose) {
+		/* Reverse array */
+		printf("Reverse test\n");
+	}
 	create_reverse(orig, len);
 	create_copy(copy, orig, len);
-	radix_sort(copy, len);
-#ifdef _HRTIMER_X86_H_
 	double total = 0;
-#endif
+	radix_sort(copy, len);
 	for(i = 0; i < ITER; i++) {
 		create_copy(arr, orig, len);
-#ifdef _HRTIMER_X86_H_
+#ifndef SUNOS
 		start = gethrtime_x86();
+#else
+		gettimeofday(&start, NULL);
 #endif
 		sortfunc(arr, len, threads);
-#ifdef _HRTIMER_X86_H_
+#ifndef SUNOS
 		end = gethrtime_x86();
-		printf("%i: %f\n", i, end-start);
-		total += end-start;
+		double totaltime = end-start;
+#else
+		gettimeofday(&end, NULL);
+		double totaltime = getTimeDouble(&start, &end);
 #endif
+		if(verbose) {
+			printf("%i: %f\n", i, totaltime);
+		}
+		total += totaltime;
 		assert(validate_sort(arr, copy, len) != 0);
 	}
-#ifdef _HRTIMER_X86_H_
-	printf("Time: %f\n", total/(ITER * 1.0));
-#endif
+	if(verbose) {
+		printf("Time: %f\n", total/(ITER * 1.0));
+	}
+	else {
+		printf("%f, ", total/(ITER * 1.0));
+	}
 
 	/* Random array */
-	printf("Random test\n");
+	if(verbose) {
+		printf("Random test\n");
+	}
 	create_random(orig, len);
 	create_copy(copy, orig, len);
 	radix_sort(copy, len);
-#ifdef _HRTIMER_X86_H_
+#ifndef SUNOS
 	total = 0;
 #endif
 	for(i = 0; i < ITER; i++) {
 		create_copy(arr, orig, len);
-#ifdef _HRTIMER_X86_H_
+#ifndef SUNOS
 		start = gethrtime_x86();
+#else
+		gettimeofday(&start, NULL);
 #endif
 		sortfunc(arr, len, threads);
-#ifdef _HRTIMER_X86_H_
+#ifndef SUNOS
 		end = gethrtime_x86();
-		printf("%i: %f\n", i, end-start);
-		total += end-start;
+		double totaltime = end-start;
+#else
+		gettimeofday(&end, NULL);
+		double totaltime = getTimeDouble(&start, &end);
 #endif
+		if(verbose) {
+			printf("%i: %f\n", i, totaltime);
+		}
+		total += totaltime;
 		assert(validate_sort(arr, copy, len) != 0);
 	}
-#ifdef _HRTIMER_X86_H_
-	printf("Time: %f\n", total/(ITER*1.0));
-#endif
-	printf("%s passed!\n", name);
-	
-	printf("------------------------\n");
+	if(verbose) {
+		printf("Time: %f\n", total/(ITER*1.0));
+	}
+	else {
+		printf("%f, ", total/(ITER*1.0));
+	}
+	if(verbose) {
+		printf("%s passed!\n", name);
+		printf("------------------------\n");
+	}
 	free(orig);
 	free(copy);
 }
@@ -147,65 +178,101 @@ void run_sort_tests(void (*sortfunc)(int *, const size_t),
 	int *orig = (int *) calloc(len, sizeof(int));
 	int *copy = (int *) calloc(len, sizeof(int));
 	int i;
-#ifdef _HRTIMER_X86_H_
+#ifndef SUNOS
 	double start, end;
+#else
+	struct timeval start, end;
 #endif
-	printf("========================\n");
-	printf("%s Sort\n", name);
-	printf("========================\n");
+	if(verbose) {
+		printf("========================\n");
+		printf("%s Sort\n", name);
+		printf("========================\n");
+	}
 	/* Reverse array */
-	printf("Reverse test\n");
+	if(verbose) {
+		printf("Reverse test\n");
+	}
 	create_reverse(orig, len);
 	create_copy(copy, orig, len);
 	radix_sort(copy, len);
-#ifdef _HRTIMER_X86_H_
 	double total = 0;
-#endif
 	for(i = 0; i < ITER; i++) {
 		create_copy(arr, orig, len);
-#ifdef _HRTIMER_X86_H_
+#ifndef SUNOS
 		start = gethrtime_x86();
+#else
+		gettimeofday(&start, NULL);
 #endif
 		sortfunc(arr, len);
-#ifdef _HRTIMER_X86_H_
+#ifndef SUNOS
 		end = gethrtime_x86();
-		printf("%i: %f\n", i, end-start);
-		total += end-start;
+		double totaltime = end-start;
+#else
+		gettimeofday(&end, NULL);
+		double totaltime = getTimeDouble(&start, &end);
 #endif
+		if(verbose) {
+			printf("%i: %f\n", i, totaltime);
+		}
+		total += totaltime;
 		assert(validate_sort(arr, copy, len) != 0);
 	}
 
-#ifdef _HRTIMER_X86_H_
-	printf("Time: %f\n", total/(ITER * 1.0));
-#endif
+	if(verbose) {
+		printf("Time: %f\n", total/(ITER * 1.0));
+	}
+	else {
+		printf("%f, ", total/(ITER * 1.0));
+	}
+
 
 	/* Random array */
-	printf("Random test\n");
+	if(verbose) {
+		printf("Random test\n");
+	}
 	create_random(orig, len);
 	create_copy(copy, orig, len);
 	radix_sort(copy, len);
-#ifdef _HRTIMER_X86_H_
 	total = 0;
-#endif
 	for(i = 0; i < ITER; i++) {
 		create_copy(arr, orig, len);
-#ifdef _HRTIMER_X86_H_
+#ifndef SUNOS
 		start = gethrtime_x86();
+#else
+		gettimeofday(&start, NULL);
 #endif
 		sortfunc(arr, len);
-#ifdef _HRTIMER_X86_H_
+#ifndef SUNOS
 		end = gethrtime_x86();
-		total += end-start;
-		printf("%i: %f\n", i, end-start);
+		double totaltime = end-start;
+#else
+		gettimeofday(&end, NULL);
+		double totaltime = getTimeDouble(&start, &end);
 #endif
+
+		total += totaltime;
+		if(verbose) {
+			printf("%i: %f\n", i, totaltime);
+		}
 		assert(validate_sort(arr, copy, len) != 0);
 	}
-#ifdef _HRTIMER_X86_H_
-	printf("Time: %f\n", total/(ITER*1.0));
-#endif
-	printf("%s passed!\n", name);
+	if(verbose) {
+		printf("Time: %f\n", total/(ITER*1.0));
+	}
+	else {
+		printf("%f, ", total/(ITER*1.0));
+	}
+
+	if(verbose) {
+		printf("%s passed!\n", name);
+		printf("------------------------\n");
+	}
 	
-	printf("------------------------\n");
 	free(orig);
 	free(copy);
+}
+
+double getTimeDouble(struct timeval *start, struct timeval *end) {
+	double time = ((end->tv_sec * 1000000 + end->tv_usec) - (start->tv_sec * 1000000 + start->tv_usec)) / 1000000.0;
+	return time;
 }

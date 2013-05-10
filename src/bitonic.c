@@ -16,6 +16,9 @@
 
 #define ASCENDING 1
 #define DESCENDING 0
+/* Good values for the threshold are 32 or 64 
+ * After that bitonic/insertion sort are about the same in cost */
+#define THRESHOLD 32
 #define MIN(a,b) ((a)<(b) ? (a) : (b))
 #define MAX(a,b) ((a)<(b) ? (b) : (a))
 
@@ -84,43 +87,26 @@ void bitonic_psort(int *arr, const size_t len, const int threads) {
 // Assigns work to a particular thread id
 void *runSort(void *data) {
 	int tid = (int) data;
-	// printf("Hello from tid %d\n", tid);
-	pthread_barrier_wait(&barrier);
-	int i, j, k;
-	
-	for(k = 2; k <= totallen; k*= 2) {
-		for(j = k>>1; j > 0; j = j>>1) {
-			for(i = tid%nthreads; i < totallen; i+=nthreads) {
-				int ixj = i^j;
-				if((ixj)>i) {
-					if((i&k) == 0 && a[i]>a[ixj]) swap(i, ixj);
-					if((i&k) != 0 && a[i]<a[ixj]) swap(i, ixj);
-				}
-			}
-			pthread_barrier_wait(&barrier);
-		}
-	}
-
-	//int sectionsize = totallen / nthreads;
-	//bitonicSort(sectionsize * tid, sectionsize, (tid+1)%2);
+	int sectionsize = totallen / nthreads;
+	bitonicSort(sectionsize * tid, sectionsize, (tid+1)%2);
 	
 	// Merge
-	// int i;
-	// for(i = nthreads / 2; i > 0; i /= 2) {
-	// 	pthread_barrier_wait(&barrier);
-	// 	if(tid < i) {
-	// 		int length = totallen / i;
-	// 		int start = tid*length;
-	// 		// int end = start + length;
-	// 		// fprintf(stderr, "%d: Merging: %d - %d, %d, %d\n", tid, start, end, length, (tid+1)%2);
-	// 		// Merge results from two threads
-	// 		bitonicMerge(start, length, (tid+1)%2);
-	// 	}
-	// 	else {
-	// 		// Do nothing if thread is not needed
-	// 		// printf("Thread %d waiting\n", tid);
-	// 	}
-	// }
+	int i;
+	for(i = nthreads / 2; i > 0; i /= 2) {
+		pthread_barrier_wait(&barrier);
+		if(tid < i) {
+			int length = totallen / i;
+			int start = tid*length;
+			// int end = start + length;
+			// fprintf(stderr, "%d: Merging: %d - %d, %d, %d\n", tid, start, end, length, (tid+1)%2);
+			// Merge results from two threads
+			bitonicMerge(start, length, (tid+1)%2);
+		}
+		else {
+			// Do nothing if thread is not needed
+			// printf("Thread %d waiting\n", tid);
+		}
+	}
 	return NULL;
 }
 
@@ -128,22 +114,42 @@ void *runSort(void *data) {
 void bitonicSort(int lo, int n, int dir) {
 	// printf("bitonicSort(lo=%d, n=%d, dir=%d)\n", lo, n, dir);
 	// do nothing if n <= 1 (nothing to sort)
-	if(n > 1) {
-		int m = n/2;
-		bitonicSort(lo, m, ASCENDING);
-		bitonicSort(lo+m, m, DESCENDING);
-		bitonicMerge(lo, n, dir);
+	if(n <= THRESHOLD) {
+		if(dir) { // ascending
+			insertion_sort(&a[lo], n);
+		}
+		else {
+			rev_insertion_sort(&a[lo], n);
+		}
+	}
+	else {
+		if(n > 1) {
+			int m = n/2;
+			bitonicSort(lo, m, ASCENDING);
+			bitonicSort(lo+m, m, DESCENDING);
+			bitonicMerge(lo, n, dir);
+		}
 	}
 }
 
 void bitonicMerge(int lo, int n, int dir) {
-	if(n > 1) {
-		int m = n/2;
-		int i;
-		for(i = lo; i < lo+m; i++)
-			compare(i, i+m, dir);
-		bitonicMerge(lo, m, dir);
-		bitonicMerge(lo+m, m, dir);
+	if(n <= THRESHOLD) {
+		if(dir) { // ascending
+			insertion_sort(&a[lo], n);
+		}
+		else {
+			rev_insertion_sort(&a[lo], n);
+		}
+	}
+	else {
+		if(n > 1) {
+			int m = n/2;
+			int i;
+			for(i = lo; i < lo+m; i++)
+				compare(i, i+m, dir);
+			bitonicMerge(lo, m, dir);
+			bitonicMerge(lo+m, m, dir);
+		}
 	}
 }
 

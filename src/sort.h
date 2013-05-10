@@ -11,6 +11,11 @@ void sample_sort(int *a, const size_t len, const int threads);
 
 void merge_sort(int *a, const size_t len);
 void two_way_merge(int *a, const size_t len);
+void k_way_merge(int *a, const size_t len, int k);
+
+void insertion_sort(int *a, const size_t len);
+void rev_insertion_sort(int *a, const size_t len);
+
 
 void qsort_wrapper(int *a, const size_t len);
 
